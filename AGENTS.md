@@ -53,7 +53,9 @@ cmd.exe /c "C:\Users\Public\arduino-cli.exe compile -b arduino:avr:uno C:\\Users
 # upload (replace COMx with the detected port)
 cmd.exe /c "C:\Users\Public\arduino-cli.exe upload -p COMx -b arduino:avr:uno C:\\Users\\Public\\<name>"
 
-# serial monitor open for 3s, then auto-close (unreliable; use Arduino IDE monitor instead)
+# open the serial monitor in a friendly way (Windows double-click launcher)
+# tools/Arduino Serial Monitor.bat auto-detects the COM port, then:
+cmd.exe /c "C:\Users\Public\arduino-cli.exe monitor -p COMx -b arduino:avr:uno --config baudrate=9600"
 ```
 
 ## Sketch workflow on this machine (important)

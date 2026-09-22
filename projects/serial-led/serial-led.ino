@@ -93,17 +93,27 @@ void runCurrentMode() {
       break;
 
     case MODE_FADE:
-      analogWrite(LED_PIN, fadeValue);
-      fadeValue += fadeStep;
-      if (fadeValue >= 255) {
-        fadeValue = 255;
-        fadeStep = -5;
-      } else if (fadeValue <= 0) {
-        fadeValue = 0;
-        fadeStep = 5;
-      }
-      delay(10);
+      softwarePwmFade();
       break;
+  }
+}
+
+const unsigned long FADE_PWM_PERIOD = 20;
+
+void softwarePwmFade() {
+  unsigned long onTime = (fadeValue * FADE_PWM_PERIOD) / 255;
+  digitalWrite(LED_PIN, HIGH);
+  delay(onTime);
+  digitalWrite(LED_PIN, LOW);
+  delay(FADE_PWM_PERIOD - onTime);
+
+  fadeValue += fadeStep;
+  if (fadeValue >= 255) {
+    fadeValue = 255;
+    fadeStep = -5;
+  } else if (fadeValue <= 0) {
+    fadeValue = 0;
+    fadeStep = 5;
   }
 }
 

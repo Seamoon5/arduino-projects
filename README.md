@@ -46,12 +46,14 @@ No setup needed. Upload, and the onboard LED blinks on/off every 500 ms.
 ### serial-led
 Upload, then open a serial monitor on the Arduino's COM port at **9600 baud** and type:
 
+**Easy way:** double-click `tools/Arduino Serial Monitor.bat` on Windows — it detects your port automatically and opens the monitor. Then type:
+
 | Command | Action |
 |---|---|
 | `1` | LED solid ON |
 | `0` | LED OFF |
 | `b` | Blink mode (500 ms on / 500 ms off) |
-| `f` | Fade mode (smooth brightness ramp) |
+| `f` | Fade mode (smooth brightness ramp — software PWM, pin 13 has no PWM hardware) |
 | `?` | Show help |
 
 ## Troubleshooting
@@ -68,13 +70,17 @@ Upload, then open a serial monitor on the Arduino's COM port at **9600 baud** an
 arduino-projects/
 ├── README.md            # you are here
 ├── AGENTS.md            # assistant setup notes
-├── projects/
-│   ├── test-blink/      # first program: blink
-│   └── serial-led/      # serial-controlled LED
+├── tools/
+│   └── Arduino Serial Monitor.bat   # double-click serial monitor launcher
+└── projects/
+    ├── test-blink/      # first program: blink
+    └── serial-led/      # serial-controlled LED
 ```
 
 ## Version history
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.2 | 2026-09-22 | Fixed `fade` mode in `serial-led` (pin 13 has no PWM hardware, so fade now uses software PWM). |
+| v1.1 | 2026-09-22 | Added `tools/Arduino Serial Monitor.bat` — double-click Windows launcher that auto-detects the COM port and opens the serial monitor. |
 | v1.0 | 2026-09-22 | Added `serial-led` (Serial LED Controller). Repo created on GitHub with `test-blink` and `serial-led` documented. |
