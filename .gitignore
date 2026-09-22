@@ -1,0 +1,15 @@
+# Secrets / local config
+secrets.h
+*.pem
+*.key
+
+# Arduino build output
+/build/
+.libraries/
+*.elf
+*.bin
+*.hex
+*.map
+
+# misc
+*.log
