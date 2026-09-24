@@ -83,10 +83,12 @@ CPU=24 OK
 
 | Problem | Fix |
 |---|---|
+| LED never turns on | Run `CPU Warning.bat` on **Windows** (not WSL). Keep the black window open. |
+| `Missing library: psutil` / `pyserial` | `python -m pip install psutil pyserial` (the bat file does this automatically). |
 | `Access is denied` on COM port | Close the Serial Monitor / other serial tools first. |
+| Serial says `CPU=xx OK` but you expected WARN | CPU must be **above 60%**. Watch Task Manager and stress the PC, or run `test_force_led.py` to force LED ON. |
 | Port not found | Re-run `board list` — replug moves the port (COM4–COM7). |
 | Upload `not in sync` / `resp=0x20` | Unplug USB, wait 2 seconds, replug, re-detect COM port, retry. |
-| LED never turns on | Check `--threshold`, and make sure the Python script is actually running. |
 
 ## Version history
 
