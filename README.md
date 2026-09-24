@@ -12,6 +12,7 @@ chip) connected through Windows from WSL2.
 |---|---|---|
 | [test-blink](projects/test-blink/) | The classic first program — blinks the onboard LED (pin 13) every second. | Working |
 | [serial-led](projects/serial-led/) | Serial LED Controller — type `1`, `0`, `b`, `f` in the Serial Monitor to control the onboard LED (on / off / blink / fade). | Working |
+| [eeprom-settings-menu](projects/eeprom-settings-menu/) | EEPROM Settings Menu — remembers LED mode, speed, and brightness after power-off. | Working |
 
 ## What you need
 
@@ -56,6 +57,21 @@ Upload, then open a serial monitor on the Arduino's COM port at **9600 baud** an
 | `f` | Fade mode (smooth brightness ramp — software PWM, pin 13 has no PWM hardware) |
 | `?` | Show help |
 
+### eeprom-settings-menu
+Open the Serial Monitor at **9600 baud** and send a command followed by Enter. Valid changes are saved to EEPROM automatically.
+
+| Command | Action |
+|---|---|
+| `mode off\|on\|blink\|fade` | Select the LED mode |
+| `speed 1..9` | Set blink speed |
+| `brightness 0..100` | Set LED brightness |
+| `show` | Show saved settings |
+| `load` | Reload settings from EEPROM |
+| `reset` | Restore factory defaults |
+| `help` | Show all commands |
+
+The first version uses only the Uno onboard LED. See `projects/eeprom-settings-menu/README.md` for the EEPROM layout, persistence test, and troubleshooting.
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -74,13 +90,15 @@ arduino-projects/
 │   └── Arduino Serial Monitor.bat   # double-click serial monitor launcher
 └── projects/
     ├── test-blink/      # first program: blink
-    └── serial-led/      # serial-controlled LED
+    ├── serial-led/      # serial-controlled LED
+    └── eeprom-settings-menu/ # persistent EEPROM settings menu
 ```
 
 ## Version history
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.3 | 2026-09-24 | Added and upload/Serial-Monitor-tested `eeprom-settings-menu` with checksum recovery and persistent LED settings. |
 | v1.2 | 2026-09-22 | Fixed `fade` mode in `serial-led` (pin 13 has no PWM hardware, so fade now uses software PWM). |
 | v1.1 | 2026-09-22 | Added `tools/Arduino Serial Monitor.bat` — double-click Windows launcher that auto-detects the COM port and opens the serial monitor. |
 | v1.0 | 2026-09-22 | Added `serial-led` (Serial LED Controller). Repo created on GitHub with `test-blink` and `serial-led` documented. |
