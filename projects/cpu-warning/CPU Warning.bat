@@ -1,20 +1,10 @@
 @echo off
 title CPU Warning Light
-set "SCRIPT_DIR=%~dp0"
-
-:: WSL UNC paths (\\wsl.localhost\...) cannot be used as CMD folders.
-:: Fall back to the Windows copy of this project.
-if "%SCRIPT_DIR:~0,2%"=="\\" (
-  echo Detected WSL path — switching to Windows copy...
-  set "SCRIPT_DIR=C:\Users\Public\cpu-warning\"
-)
-
-cd /d "%SCRIPT_DIR%" 2>nul
+:: Always run from this project folder (works from Desktop or anywhere)
+set "SCRIPT_DIR=C:\Users\Public\cpu-warning\"
+cd /d "%SCRIPT_DIR%"
 if errorlevel 1 (
-  echo ERROR: Cannot open folder:
-  echo   %SCRIPT_DIR%
-  echo Use this file instead:
-  echo   C:\Users\Public\cpu-warning\CPU Warning.bat
+  echo ERROR: Missing folder %SCRIPT_DIR%
   pause
   exit /b 1
 )
