@@ -14,6 +14,7 @@ chip) connected through Windows from WSL2.
 | [serial-led](projects/serial-led/) | Serial LED Controller — type `1`, `0`, `b`, `f` in the Serial Monitor to control the onboard LED (on / off / blink / fade). | Working |
 | [eeprom-settings-menu](projects/eeprom-settings-menu/) | EEPROM Settings Menu — remembers LED mode, speed, and brightness after power-off. | Working |
 | [cpu-warning](projects/cpu-warning/) | CPU Warning Light — Python sends PC CPU usage over COM; Arduino LED turns on above 60% CPU. | Working |
+| [key-logger](projects/key-logger/) | Key Logger — Windows script sends keys you type to the Uno; stored in EEPROM; read back via Serial Monitor or hotkeys. | Working |
 
 ## What you need
 
@@ -83,6 +84,16 @@ The first version uses only the Uno onboard LED. See `projects/eeprom-settings-m
 
 Options: `--port COM6`, `--threshold 80`, `--interval 0.5`.
 
+### key-logger
+1. Upload `key-logger` (already on the board if you just built it).
+2. **Close** the Serial Monitor first (only one program can use the COM port).
+3. On Windows, double-click `Key Logger.bat` (Desktop or `C:\Users\Public\key-logger\`).
+4. Type normally — keys are saved in the Uno EEPROM (~1000 characters max).
+5. Hotkeys while the logger runs: **F6** read log, **F7** clear, **F8** pause/resume, **F10** quit.
+6. Or quit the logger, open Serial Monitor, and type: `read`, `count`, `find hello`, `clear`, `pause`, `resume`, `status`, `help`.
+
+LED flashes when a key is saved, blinks slowly when paused, solid when the log is full.
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -103,13 +114,15 @@ arduino-projects/
     ├── test-blink/      # first program: blink
     ├── serial-led/      # serial-controlled LED
     ├── eeprom-settings-menu/ # persistent EEPROM settings menu
-    └── cpu-warning/     # PC CPU usage -> COM -> LED warning light
+    ├── cpu-warning/     # PC CPU usage -> COM -> LED warning light
+    └── key-logger/      # PC keystrokes -> COM -> EEPROM -> serial readback
 ```
 
 ## Version history
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.6 | 2026-09-24 | Added `key-logger` — keystrokes to EEPROM over COM; Serial commands + F6/F7/F8/F10 hotkeys; protocol test passed on COM6. |
 | v1.5 | 2026-09-24 | `cpu-warning` spike mode: LED holds 5s then fades out (software PWM); repeats while CPU stays high. |
 | v1.4 | 2026-09-24 | Added `cpu-warning` — Python CPU monitor sends usage over COM; Arduino LED warns above 60% CPU. |
 | v1.3 | 2026-09-24 | Added and upload/Serial-Monitor-tested `eeprom-settings-menu` with checksum recovery and persistent LED settings. |
