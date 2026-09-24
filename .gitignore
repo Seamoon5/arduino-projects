@@ -13,3 +13,6 @@ secrets.h
 
 # misc
 *.log
+# Python
+__pycache__/
+*.pyc
