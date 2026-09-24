@@ -241,6 +241,34 @@ void webStop() {
   webRunning = false;
 }
 
+/* ---------------- WiFi connect diagnostics ---------------- */
+
+const char* wifiStatusText(int s) {
+  switch (s) {
+    case 0:  return "IDLE - starting";
+    case 1:  return "SSID NOT FOUND - network not visible";
+    case 3:  return "CONNECTED";
+    case 4:  return "CONNECT FAILED";
+    case 5:  return "CONNECTION LOST";
+    case 6:  return "WRONG PASSWORD";
+    case 7:  return "DISCONNECTED - not associated";
+    default: return "UNKNOWN";
+  }
+}
+
+// Runs from edgentTimer, which keeps ticking inside Blynk's blocking
+// connect wait - so this prints every 5 s while the board is still trying.
+void printWifiStatus() {
+  if (BlynkState::is(MODE_RUNNING)) return;
+  int s = WiFi.status();
+  Serial.print(F("[wifi] status="));
+  Serial.print(s);
+  Serial.print(F(" ("));
+  Serial.print(wifiStatusText(s));
+  Serial.print(F(") try="));
+  Serial.println(WiFi.SSID());
+}
+
 /* ---------------- setup / loop ---------------- */
 
 void setup() {
@@ -259,6 +287,7 @@ void setup() {
   Serial.println(F("--------------------------------------------"));
 
   BlynkEdgent.begin();
+  edgentTimer.setInterval(5000L, printWifiStatus);
 }
 
 void loop() {
