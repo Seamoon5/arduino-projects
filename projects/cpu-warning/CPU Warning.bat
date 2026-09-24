@@ -1,29 +1,46 @@
 @echo off
 title CPU Warning Light
-cd /d "%~dp0"
+set "SCRIPT_DIR=%~dp0"
+
+:: WSL UNC paths (\\wsl.localhost\...) cannot be used as CMD folders.
+:: Fall back to the Windows copy of this project.
+if "%SCRIPT_DIR:~0,2%"=="\\" (
+  echo Detected WSL path — switching to Windows copy...
+  set "SCRIPT_DIR=C:\Users\Public\cpu-warning\"
+)
+
+cd /d "%SCRIPT_DIR%" 2>nul
+if errorlevel 1 (
+  echo ERROR: Cannot open folder:
+  echo   %SCRIPT_DIR%
+  echo Use this file instead:
+  echo   C:\Users\Public\cpu-warning\CPU Warning.bat
+  pause
+  exit /b 1
+)
 
 echo ============================================
 echo   CPU Warning Light
-echo   LED turns ON when CPU is above 60%%
+echo   LED ON when CPU above 60%%
+echo   Folder: %CD%
 echo ============================================
 echo.
 
 where python >nul 2>nul
 if errorlevel 1 (
   echo ERROR: Python not found on Windows.
-  echo Install Python 3 from https://www.python.org/downloads/
-  echo During install, tick "Add python.exe to PATH".
+  echo Install from https://www.python.org/downloads/
   pause
   exit /b 1
 )
 
 python -c "import psutil, serial" >nul 2>nul
 if errorlevel 1 (
-  echo Installing required libraries ^(psutil, pyserial^)...
+  echo Installing libraries ^(psutil, pyserial^)...
   python -m pip install -r requirements.txt
   if errorlevel 1 (
-    echo ERROR: Could not install libraries.
-    echo Try manually:  python -m pip install psutil pyserial
+    echo ERROR: pip install failed. Run:
+    echo   python -m pip install psutil pyserial
     pause
     exit /b 1
   )
