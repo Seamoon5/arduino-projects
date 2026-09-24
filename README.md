@@ -13,6 +13,7 @@ chip) connected through Windows from WSL2.
 | [test-blink](projects/test-blink/) | The classic first program — blinks the onboard LED (pin 13) every second. | Working |
 | [serial-led](projects/serial-led/) | Serial LED Controller — type `1`, `0`, `b`, `f` in the Serial Monitor to control the onboard LED (on / off / blink / fade). | Working |
 | [eeprom-settings-menu](projects/eeprom-settings-menu/) | EEPROM Settings Menu — remembers LED mode, speed, and brightness after power-off. | Working |
+| [cpu-warning](projects/cpu-warning/) | CPU Warning Light — Python sends PC CPU usage over COM; Arduino LED turns on above 60% CPU. | Working |
 
 ## What you need
 
@@ -72,6 +73,15 @@ Open the Serial Monitor at **9600 baud** and send a command followed by Enter. V
 
 The first version uses only the Uno onboard LED. See `projects/eeprom-settings-menu/README.md` for the EEPROM layout, persistence test, and troubleshooting.
 
+### cpu-warning
+1. Upload `cpu-warning`.
+2. On Windows, double-click `CPU Warning.bat` (or run `python cpu_sender.py`).
+3. The script sends CPU % over the COM port every second.
+4. Onboard LED turns **ON when CPU > 60%**, OFF when it drops back down.
+5. If the script stops or USB disconnects, the LED turns OFF after 3 seconds.
+
+Options: `--port COM6`, `--threshold 80`, `--interval 0.5`.
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -91,13 +101,15 @@ arduino-projects/
 └── projects/
     ├── test-blink/      # first program: blink
     ├── serial-led/      # serial-controlled LED
-    └── eeprom-settings-menu/ # persistent EEPROM settings menu
+    ├── eeprom-settings-menu/ # persistent EEPROM settings menu
+    └── cpu-warning/     # PC CPU usage -> COM -> LED warning light
 ```
 
 ## Version history
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.4 | 2026-09-24 | Added `cpu-warning` — Python CPU monitor sends usage over COM; Arduino LED warns above 60% CPU. |
 | v1.3 | 2026-09-24 | Added and upload/Serial-Monitor-tested `eeprom-settings-menu` with checksum recovery and persistent LED settings. |
 | v1.2 | 2026-09-22 | Fixed `fade` mode in `serial-led` (pin 13 has no PWM hardware, so fade now uses software PWM). |
 | v1.1 | 2026-09-22 | Added `tools/Arduino Serial Monitor.bat` — double-click Windows launcher that auto-detects the COM port and opens the serial monitor. |
