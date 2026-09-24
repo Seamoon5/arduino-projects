@@ -64,13 +64,36 @@ void CopyString(const String& s, T(&arr)[size]) {
   s.toCharArray(arr, size);
 }
 
+/*
+ * Preprovisioned credentials.
+ *
+ * secrets.h lives next to this file and is listed in .gitignore, so the WiFi
+ * password and Blynk auth token NEVER reach GitHub. Create it with the
+ * "Set WiFi.bat" helper, or copy secrets.h.example and fill it in.
+ */
+#ifdef __has_include
+#  if __has_include("secrets.h")
+#    include "secrets.h"
+#  endif
+#endif
+
+#if !defined(BLYNK_PROV_SSID)
+#define BLYNK_PROV_SSID   ""
+#define BLYNK_PROV_PASS   ""
+#define BLYNK_PROV_TOKEN  ""
+#endif
+
 static bool config_load_blnkopt()
 {
+  // Nothing to preprovision with - stay in normal (hotspot) provisioning mode.
+  if (!strlen(BLYNK_PROV_SSID) || !strlen(BLYNK_PROV_TOKEN)) {
+    return false;
+  }
+
   static const char blnkopt[] = "blnkopt\0"
-    BLYNK_PARAM_KV("ssid" , BLYNK_PARAM_PLACEHOLDER_64
-                            BLYNK_PARAM_PLACEHOLDER_64
-                            BLYNK_PARAM_PLACEHOLDER_64
-                            BLYNK_PARAM_PLACEHOLDER_64)
+    BLYNK_PARAM_KV("ssid" , BLYNK_PROV_SSID)
+    BLYNK_PARAM_KV("pass" , BLYNK_PROV_PASS)
+    BLYNK_PARAM_KV("auth" , BLYNK_PROV_TOKEN)
     BLYNK_PARAM_KV("host" , CONFIG_DEFAULT_SERVER)
     BLYNK_PARAM_KV("port" , BLYNK_TOSTRING(CONFIG_DEFAULT_PORT))
     "\0";
@@ -82,7 +105,7 @@ static bool config_load_blnkopt()
   BlynkParam::iterator host = prov["host"];
   BlynkParam::iterator port = prov["port"];
 
-  if (!(ssid.isValid() && auth.isValid())) {
+  if (!(ssid.isValid() && pass.isValid() && auth.isValid())) {
     return false;
   }
 
