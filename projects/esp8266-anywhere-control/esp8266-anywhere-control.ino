@@ -1,5 +1,5 @@
 /*
-  ESP8266 Anywhere Control v3.0
+  ESP8266 Anywhere Control v3.1
   -----------------------------
   Control onboard LED + 5 loads from ANYWHERE via Blynk Cloud,
   plus a local fallback page on your home network.
@@ -29,7 +29,7 @@
 
 #define BLYNK_TEMPLATE_ID           "TMPL6Hkyu5N7f"
 #define BLYNK_TEMPLATE_NAME         "Quickstart Template"
-#define BLYNK_FIRMWARE_VERSION      "3.0.0"
+#define BLYNK_FIRMWARE_VERSION      "3.1.0"
 
 #define BLYNK_PRINT Serial
 #define APP_DEBUG
@@ -282,7 +282,7 @@ void setup() {
   delay(200);
   Serial.println();
   Serial.println(F("--------------------------------------------"));
-  Serial.println(F(" ESP8266 Anywhere Control v3.0"));
+  Serial.println(F(" ESP8266 Anywhere Control v3.1"));
   Serial.println(F(" Template: Quickstart Template"));
   Serial.println(F("--------------------------------------------"));
 

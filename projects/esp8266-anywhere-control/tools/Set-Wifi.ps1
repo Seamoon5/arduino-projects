@@ -41,8 +41,8 @@ if ($ssid -eq "")  { Fail "WiFi name is empty." }
 if ($pass -eq "")  { Fail "WiFi password is empty." }
 if ($token -eq "") { Fail "Blynk Auth Token is empty." }
 
-# A real Blynk Auth Token is exactly 32 hex characters, no spaces.
-if ($token -notmatch '^[0-9a-fA-F]{32}$') {
+# A real Blynk Auth Token is exactly 32 alphanumeric characters, no spaces.
+if ($token -notmatch '^[A-Za-z0-9]{32}$') {
   Fail ("Auth Token looks wrong (you entered " + $token.Length + " characters).`r`n" +
         "It must be exactly 32 letters/numbers, no spaces.`r`n`r`n" +
         "Re-copy it: blynk.cloud -> Devices -> your device`r`n" +
