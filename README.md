@@ -77,8 +77,9 @@ The first version uses only the Uno onboard LED. See `projects/eeprom-settings-m
 1. Upload `cpu-warning`.
 2. On Windows, double-click `CPU Warning.bat` (or run `python cpu_sender.py`).
 3. The script sends CPU % over the COM port every second.
-4. Onboard LED turns **ON when CPU > 60%**, OFF when it drops back down.
-5. If the script stops or USB disconnects, the LED turns OFF after 3 seconds.
+4. Onboard LED turns **ON when CPU > 60%** — stays full on for **5 seconds**, then **fades out**.
+5. If CPU is still high after the fade, the 5s + fade cycle repeats.
+6. If the script stops or USB disconnects, the LED turns OFF after 3 seconds.
 
 Options: `--port COM6`, `--threshold 80`, `--interval 0.5`.
 
@@ -109,6 +110,7 @@ arduino-projects/
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.5 | 2026-09-24 | `cpu-warning` spike mode: LED holds 5s then fades out (software PWM); repeats while CPU stays high. |
 | v1.4 | 2026-09-24 | Added `cpu-warning` — Python CPU monitor sends usage over COM; Arduino LED warns above 60% CPU. |
 | v1.3 | 2026-09-24 | Added and upload/Serial-Monitor-tested `eeprom-settings-menu` with checksum recovery and persistent LED settings. |
 | v1.2 | 2026-09-22 | Fixed `fade` mode in `serial-led` (pin 13 has no PWM hardware, so fade now uses software PWM). |

@@ -4,7 +4,9 @@ A tiny CPU-load warning system:
 
 1. **Python script** on your PC reads CPU usage every second.
 2. It sends the number over the USB **COM port**.
-3. **Arduino** turns the onboard LED **ON** when CPU usage is **above 60%**, and OFF when it drops back down.
+3. **Arduino** turns the onboard LED **ON** when CPU usage is **above 60%**.
+4. On a spike, the LED stays **full ON for 5 seconds**, then **fades out** smoothly over 1.5s.
+5. If CPU is still above 60% after the fade, the 5s + fade cycle repeats.
 
 No extra wires or parts — just the Arduino Uno + USB cable.
 
@@ -68,7 +70,9 @@ Serial Monitor at **9600 baud** will show lines like:
 
 ```text
 CPU-WARNING ready
-CPU=67 WARN
+CPU=67 SPIKE - LED ON 5s then fade
+Fade out...
+Fade done LED=OFF
 CPU=24 OK
 ```
 
@@ -94,4 +98,5 @@ CPU=24 OK
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.1 | 2026-09-24 | Spike behavior: LED full ON for 5s, then smooth software fade-out (1.5s); repeats while CPU stays high. |
 | v1.0 | 2026-09-24 | Initial release: Python CPU sender + Arduino LED warning at >60% CPU, with 3-second serial timeout safety. |
