@@ -1,59 +1,70 @@
-# ESP8266 LED Web Server — ON/OFF from phone
+# ESP8266 Multi-Load Web Server — phone ON/OFF (v2.0)
 
-Control the ESP8266 built-in LED from your phone browser.  
-**No home WiFi password required** — the board creates its own hotspot.
+Control the **onboard LED + 5 spare outputs** from your phone browser.  
+Spare pins are ready for future loads (LEDs, relay modules, etc.).  
+**No home WiFi password** — the board creates its own hotspot.
 
 ## How to use (phone)
 
-1. Upload the sketch (once) — already done on COM9 if you ran the AI session
-2. On the phone: WiFi settings → join **`ESP8266-LED`**
-3. Password: **`esp8266led`**
-4. Open browser → **`http://192.168.4.1`**
-5. Tap **ON** / **OFF**
+1. On the phone: WiFi → join **`ESP8266-LED`**
+2. Password: **`esp8266led`**
+3. Browser → **`http://192.168.4.1`**
+4. Tap **ON/OFF** on any channel · **stop** = all off
 
-## How it works
+## Channels
 
-| Piece | Meaning |
-|-------|---------|
-| Access point (AP) | ESP8266 acts like a tiny router |
-| `ESP8266-LED` | WiFi name your phone joins |
-| `http://192.168.4.1` | Web page served by the ESP8266 |
-| Built-in LED | GPIO2 / `LED_BUILTIN` (onboard) |
+| # | Name | Pin (NodeMCU/D1 mini) | GPIO |
+|---|------|------------------------|------|
+| 0 | LED | onboard | GPIO2 (active-LOW) |
+| 1 | LOAD1 | D1 | GPIO5 |
+| 2 | LOAD2 | D2 | GPIO4 |
+| 3 | LOAD3 | D5 | GPIO14 |
+| 4 | LOAD4 | D6 | GPIO12 |
+| 5 | LOAD5 | D7 | GPIO13 |
+
+Avoided for safety: GPIO0 / GPIO15 (boot), GPIO1/GPIO3 (UART).
+
+## Wiring future loads (important)
+
+ESP pins are **3.3V logic only** — not for motors/high current.
+
+- Small LED → resistor (~220Ω–1kΩ) to pin, GND common  
+- Relay module → use one that accepts **3.3V logic** (or level shift); many 5V relays need a transistor if logic is 5V-only  
+- Keep **common GND** between ESP and driver  
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `esp8266-led-web.ino` | Full sketch (web server + LED control) |
+| `esp8266-led-web.ino` | Full sketch v2.0 |
 | `README.md` | This file |
 
-## Windows copy / upload
+## Upload (this machine)
 
-```
-C:\Users\Public\esp8266-led-web\esp8266-led-web.ino
-```
+Windows copy: `C:\Users\Public\esp8266-led-web\`
 
 ```bash
 cmd.exe /c "C:\Users\Public\arduino-cli.exe compile -b esp8266:esp8266:nodemcuv2 C:\\Users\\Public\\esp8266-led-web"
 cmd.exe /c "C:\Users\Public\arduino-cli.exe upload -p COM9 -b esp8266:esp8266:nodemcuv2 C:\\Users\\Public\\esp8266-led-web"
 ```
 
-## API (optional)
+Detect COM first after every replug.
 
-- `GET /status` → `{"led":"on","ip":"192.168.4.1"}`
-- `GET /led?state=on` or `GET /led?state=off`
+## API
 
-## Security note
-
-The hotspot password is in the sketch (required for WPA2).  
-Change `AP_SSID` / `AP_PASS` at the top of the `.ino` if you want.  
-This network is only for LED control — don’t reuse a personal password.
+- `GET /status` → JSON all channels  
+- `GET /set?id=0&state=on` (id 0–5)  
+- `GET /all?state=off`  
 
 ## Version history
 
+### v2.0 — 2026-09-24
+- Multi-channel UI (6 cards: LED + LOAD1–5)
+- Spare GPIOs: D1, D2, D5, D6, D7 ready for loads
+- `/set`, `/all`, `/status` endpoints
+- All outputs default OFF at boot (safe)
+
 ### v1.0 — 2026-09-24
-- First release
+- First release: single onboard LED ON/OFF
 - SoftAP `ESP8266-LED` / `esp8266led`
-- Mobile-friendly ON/OFF page at `http://192.168.4.1`
-- `/status` JSON endpoint
-- 303 redirect back to UI after button press
+- Mobile page at `http://192.168.4.1`
