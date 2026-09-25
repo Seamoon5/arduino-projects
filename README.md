@@ -1,10 +1,9 @@
-# Arduino Uno Projects
+# Arduino and ESP Projects
 
-A personal collection of Arduino Uno sketches, built and uploaded with
+A personal collection of Arduino Uno, ESP8266, and ESP32 sketches, built and uploaded with
 [Arduino CLI](https://arduino.github.io/arduino-cli/).
 
-Every sketch here is **complete and tested** on a real Arduino Uno clone (CH340 USB
-chip) connected through Windows from WSL2.
+The projects here are **complete and hardware-tested** on the connected boards through Windows from WSL2.
 
 ## Projects
 
@@ -15,11 +14,12 @@ chip) connected through Windows from WSL2.
 | [eeprom-settings-menu](projects/eeprom-settings-menu/) | EEPROM Settings Menu — remembers LED mode, speed, and brightness after power-off. | Working |
 | [cpu-warning](projects/cpu-warning/) | CPU Warning Light — Python sends PC CPU usage over COM; Arduino LED turns on above 60% CPU. | Working |
 | [key-logger](projects/key-logger/) | Key Logger — Windows script sends keys you type to the Uno; stored in EEPROM; read back via Serial Monitor or hotkeys. | Working |
+| [esp32-blink-test](projects/esp32-blink-test/) | ESP32 hardware test — prints chip information and a Serial heartbeat; blinks automatically when the board profile defines `LED_BUILTIN`. | Working |
 
 ## What you need
 
-- Arduino Uno (or any Uno-compatible board)
-- USB cable (Type A to B)
+- Arduino Uno, ESP8266, or ESP32 board
+- USB data cable appropriate for the board
 - Arduino CLI running on **Windows**
 
 ## How to upload (this machine)
@@ -94,6 +94,14 @@ Options: `--port COM6`, `--threshold 80`, `--interval 0.5`.
 
 LED flashes when a key is saved, blinks slowly when paused, solid when the log is full.
 
+### esp32-blink-test
+1. Copy `projects/esp32-blink-test/esp32-blink-test.ino` to a Windows-visible folder.
+2. Compile with `esp32:esp32:esp32`.
+3. Detect the current COM port, then upload with that port.
+4. Open Serial Monitor at **115200 baud**.
+
+The verified board identifies as `ESP32-D0WD-V3` and prints a heartbeat every second. The generic ESP32 profile does not define `LED_BUILTIN`, so this test does not guess an unknown GPIO pin; a board-specific profile can enable the LED automatically.
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -113,15 +121,17 @@ arduino-projects/
 └── projects/
     ├── test-blink/      # first program: blink
     ├── serial-led/      # serial-controlled LED
-    ├── eeprom-settings-menu/ # persistent EEPROM settings menu
-    ├── cpu-warning/     # PC CPU usage -> COM -> LED warning light
-    └── key-logger/      # PC keystrokes -> COM -> EEPROM -> serial readback
+     ├── eeprom-settings-menu/ # persistent EEPROM settings menu
+     ├── cpu-warning/     # PC CPU usage -> COM -> LED warning light
+     ├── key-logger/      # PC keystrokes -> COM -> EEPROM -> serial readback
+     └── esp32-blink-test/ # ESP32 chip report + safe Serial heartbeat
 ```
 
 ## Version history
 
 | Version | Date | Changes |
 |---|---|---|
+| v1.7 | 2026-09-25 | Added and hardware-verified `esp32-blink-test` on `ESP32-D0WD-V3`; Serial heartbeat at 115200 baud. |
 | v1.6 | 2026-09-24 | Added `key-logger` — keystrokes to EEPROM over COM; Serial commands + F6/F7/F8/F10 hotkeys; protocol test passed on COM6. |
 | v1.5 | 2026-09-24 | `cpu-warning` spike mode: LED holds 5s then fades out (software PWM); repeats while CPU stays high. |
 | v1.4 | 2026-09-24 | Added `cpu-warning` — Python CPU monitor sends usage over COM; Arduino LED warns above 60% CPU. |
